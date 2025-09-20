@@ -17,11 +17,13 @@ var (
 
 type TransactionValidator struct {
 	currencyRegex *regexp.Regexp
+	seen          map[string]struct{}
 }
 
 func NewTransactionValidator() *TransactionValidator {
 	return &TransactionValidator{
 		currencyRegex: regexp.MustCompile(`^[A-Z]{3}$`),
+		seen:          make(map[string]struct{}),
 	}
 }
 
@@ -48,6 +50,11 @@ func (v *TransactionValidator) ValidateTransaction(tx *domain.Transaction) error
 	if tx.CreatedAt.After(time.Now().Add(5 * time.Minute)) {
 		errs = append(errs, errors.New("transaction date cannot be in the future"))
 	}
+
+	if _, ok := v.seen[tx.ID]; ok {
+		return ErrDuplicateTransaction
+	}
+	v.seen[tx.ID] = struct{}{}
 
 	if len(errs) > 0 {
 		return fmt.Errorf("validation errors: %v", errs)

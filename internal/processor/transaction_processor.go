@@ -41,6 +41,7 @@ func NewTransactionProcessor(
 		eventCh:       make(chan domain.TransactionEvent, 1000),
 		workerPool:    make(chan struct{}, maxWorkers),
 		metrics:       make(map[string]int),
+		logger:        slog.Default(),
 	}
 }
 
