@@ -40,7 +40,7 @@ func TestTransactionProcessor_ProcessTransaction_TransferSuccess(t *testing.T) {
 }
 
 func TestFraudDetector_AnalyzeTransaction_LargeAmount(t *testing.T) {
-	tx := &domain.Transaction{Amount: 20000}
+	tx := &domain.Transaction{Amount: 200000}
 	fd := NewFraudDetector()
 
 	score, flags := fd.AnalyzeTransaction(tx)
